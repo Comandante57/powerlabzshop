@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POWER LABZ | パワーラボ - Goth Supplement Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&amp;family=Noto+Sans+JP:wght@300;900&amp;family=Metal+Mania&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --goth-black: #030303;
+            --blood-red: #9a0000;
+            --neon-red: #ff1a1a;
+            --goth-white: #f0f0f0;
+            --tech-gray: #1a1a1a;
+        }
+
+        body { 
+            font-family: 'Space Mono', monospace; 
+            background-color: var(--goth-black);
+            color: var(--goth-white);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(154, 0, 0, 0.05) 0%, transparent 80%),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Personalización de la barra de scroll para el carrito */
+        #cart-items::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #cart-items::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        #cart-items::-webkit-scrollbar-thumb {
+            background: #9a0000; /* El rojo de tu marca */
+            border-radius: 2px;
+        }
+
+        #cart-items::-webkit-scrollbar-thumb:hover {
+            background: #ff1a1a; /* Rojo neón al pasar el mouse */
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #9a0000;
+            border-radius: 10px;
+        }
+
+        .gothic-font { font-family: 'UnifrakturMaguntia', serif; }
+        .metal-font { font-family: 'Metal Mania', cursive; }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(154, 0, 0, 0.2);
+            position: absolute;
+            z-index: 99;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .vertical-kanji {
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-size: 0.75rem;
+            letter-spacing: 0.6em;
+            color: var(--blood-red);
+            font-weight: 900;
+        }
+
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 3px solid var(--blood-red);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            line-height: 0.8;
+            font-family: 'Metal Mania', cursive;
+            text-transform: uppercase;
+            color: var(--goth-white);
+            letter-spacing: -3px;
+            filter: drop-shadow(0 0 15px rgba(154, 0, 0, 0.6));
+        }
+
+        .supplement-card {
+            background: var(--tech-gray);
+            border: 1px solid #333;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+        }
+        
+        .supplement-card:hover {
+            border-color: var(--neon-red);
+            transform: scale(1.02);
+            box-shadow: inset 0 0 20px rgba(154, 0, 0, 0.2), 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .supplement-card::before {
+            content: "PHARMA GRADE";
+            position: absolute;
+            top: 10px;
+            left: -30px;
+            background: var(--blood-red);
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            padding: 2px 40px;
+            transform: rotate(-45deg);
+            z-index: 10;
+        }
+
+        .btn-order {
+            background: #000;
+            border: 2px solid var(--blood-red);
+            color: var(--goth-white);
+            padding: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+        }
+        .btn-order:hover {
+            background: var(--blood-red);
+            box-shadow: 0 0 20px var(--blood-red);
+            color: white;
+        }
+
+        .zeigarnik-bar {
+            height: 4px;
+            background: #111;
+            width: 100%;
+            position: relative;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .zeigarnik-progress {
+            height: 100%;
+            background: var(--neon-red);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            box-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .coupon-input {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: var(--neon-red);
+            font-family: 'Space Mono', monospace;
+            padding: 10px;
+            font-size: 12px;
+            width: 100%;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        /* Animación para el input de cupón */
+        .coupon-input:focus {
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.2);
+            background-color: rgba(20, 20, 20, 1);
+            letter-spacing: 2px;
+        }
+
+        #coupon-msg.text-green-500 {
+            color: #10b981; /* Un verde esmeralda que resalte sobre el negro */
+            text-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+        }
+
+        #coupon-msg.text-red-500 {
+            color: #ef4444; /* Rojo vibrante para errores */
+            text-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+        }
+
+
+        .coupon-input:focus { border-color: var(--blood-red); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--blood-red); }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.-left-20{left:-5rem}.-right-2{right:-0.5rem}.-top-2{top:-0.5rem}.right-8{right:2rem}.top-0{top:0px}.top-20{top:5rem}.top-8{top:2rem}.z-10{z-index:10}.z-\[100\]{z-index:100}.z-\[200\]{z-index:200}.z-\[300\]{z-index:300}.mx-auto{margin-left:auto;margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-24{margin-bottom:6rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:0.5rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-20{height:5rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-auto{height:auto}.h-full{height:100%}.h-px{height:1px}.h-64{height:16rem}.max-h-\[90vh\]{max-height:90vh}.w-12{width:3rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-full{width:100%}.max-w-5xl{max-width:64rem}.max-w-\[1400px\]{max-width:1400px}.max-w-\[300px\]{max-width:300px}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-12{gap:3rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-y-auto{overflow-y:auto}.rounded-full{border-radius:9999px}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-l-4{border-left-width:4px}.border-red-600{--tw-border-opacity:1;border-color:rgb(220 38 38 / var(--tw-border-opacity, 1))}.border-red-900{--tw-border-opacity:1;border-color:rgb(127 29 29 / var(--tw-border-opacity, 1))}.border-red-900\/20{border-color:rgb(127 29 29 / 0.2)}.border-red-900\/30{border-color:rgb(127 29 29 / 0.3)}.border-red-900\/50{border-color:rgb(127 29 29 / 0.5)}.border-white\/5{border-color:rgb(255 255 255 / 0.05)}.bg-\[\#000\]{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-\[\#050505\]{--tw-bg-opacity:1;background-color:rgb(5 5 5 / var(--tw-bg-opacity, 1))}.bg-black{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-black\/95{background-color:rgb(0 0 0 / 0.95)}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-red-600\/10{background-color:rgb(220 38 38 / 0.1)}.bg-red-950\/10{background-color:rgb(69 10 10 / 0.1)}.bg-red-950\/20{background-color:rgb(69 10 10 / 0.2)}.bg-stone-900{--tw-bg-opacity:1;background-color:rgb(28 25 23 / var(--tw-bg-opacity, 1))}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.object-contain{object-fit:contain}.p-12{padding:3rem}.p-4{padding:1rem}.p-8{padding:2rem}.p-6{padding:1.5rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-4{padding-bottom:1rem}.pb-6{padding-bottom:1.5rem}.pl-4{padding-left:1rem}.pr-4{padding-right:1rem}.pt-32{padding-top:8rem}.pt-6{padding-top:1.5rem}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[8px\]{font-size:8px}.text-\[9px\]{font-size:9px}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-light{font-weight:300}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-\[0\.3em\]{letter-spacing:0.3em}.tracking-\[0\.4em\]{letter-spacing:0.4em}.tracking-\[0\.5em\]{letter-spacing:0.5em}.tracking-tighter{letter-spacing:-0.05em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-stone-400{--tw-text-opacity:1;color:rgb(168 162 158 / var(--tw-text-opacity, 1))}.text-stone-500{--tw-text-opacity:1;color:rgb(120 113 108 / var(--tw-text-opacity, 1))}.text-stone-600{--tw-text-opacity:1;color:rgb(87 83 78 / var(--tw-text-opacity, 1))}.text-stone-700{--tw-text-opacity:1;color:rgb(68 64 60 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.line-through{-webkit-text-decoration-line:line-through;text-decoration-line:line-through}.opacity-20{opacity:0.2}.blur-\[100px\]{--tw-blur:blur(100px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-2xl{--tw-drop-shadow:drop-shadow(0 25px 25px rgb(0 0 0 / 0.15));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.grayscale-\[0\.2\]{--tw-grayscale:grayscale(0.2);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.grayscale-\[0\.5\]{--tw-grayscale:grayscale(0.5);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.grayscale-\[0\.4\]{--tw-grayscale:grayscale(0.4);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-700{transition-duration:700ms}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.hover\:grayscale-0:hover{--tw-grayscale:grayscale(0);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:grayscale-0{--tw-grayscale:grayscale(0);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}@media (min-width: 768px){.md\:w-1\/2{width:50%}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body>
+
+    <div class="scanline"></div>
+
+    <nav class="glass-nav fixed top-0 w-full z-[100] h-20">
+        <div class="max-w-[1400px] mx-auto px-6 h-full flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="h-12 w-12 border-2 border-red-600 flex items-center justify-center font-black text-red-600 text-2xl gothic-font cursor-pointer" onclick="location.reload()">P</div>
+                <div class="flex flex-col">
+                    <span class="metal-font text-2xl leading-none tracking-widest">POWER LABZ</span>
+                    <span class="text-[9px] tracking-[0.5em] text-red-600 font-bold uppercase">Research Grade Supplements</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-8">
+                <button onclick="toggleCart()" class="flex items-center gap-3 bg-red-950/20 px-4 py-2 border border-red-900/30 group">
+                    <div class="flex flex-col items-end mr-2">
+                        <span class="text-[8px] font-bold text-stone-500 uppercase tracking-tighter">Status del Protocolo</span>
+                        <span id="nav-zeigarnik-text" class="text-[10px] font-black text-red-600 uppercase tracking-widest italic">Incompleto</span>
+                    </div>
+                    <div class="relative">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-width="2"></path></svg>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-red-600 text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full font-black">0</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32">
+        <section class="max-w-[1400px] mx-auto px-6 mb-24 relative grid lg:grid-cols-2 gap-12 items-center">
+            <div class="absolute -left-20 top-20 vertical-kanji opacity-20">絶対的な強さ</div>
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="h-px w-12 bg-red-600"></span>
+                    <span class="text-xs font-black tracking-[0.4em] text-red-600 uppercase">Origin: Tokyo Laboratory</span>
+                </div>
+                <h1 class="hero-title mb-6">DARK<br>STEROID<br>ESTHETIC.</h1>
+                <p class="text-stone-400 text-sm leading-relaxed max-w-sm mb-10 font-light uppercase tracking-wider">
+                    Pureza absoluta inspirada en la oscuridad. Perfeccionada por la ciencia japonesa. Tu ritual de poder comienza aquí.
+                </p>
+                <div class="flex gap-4">
+                    <button class="btn-order px-10 py-4 text-xs" onclick="document.getElementById('catalog-section').scrollIntoView({behavior:'smooth'})">Ver Catálogo</button>
+                </div>
+            </div>
+            <div class="relative group">
+                <div class="absolute inset-0 bg-red-600/10 blur-[100px]"></div>
+                <img src="https://i.postimg.cc/FR1svrP7/c-HJpdm-F0ZS9sci9pb-WFn-ZXMvd2Vic2l0ZS8y-MDI0LTEw-L3Jhd3Bpe-GVsb2Zma-WNl-MTFf-Y3li-ZXJza-Wdpb-Glzb-V.png" class="w-full max-w-lg mx-auto relative z-10 filter grayscale-[0.5] hover:grayscale-0 transition duration-700 drop-shadow-2xl">
+            </div>
+        </section>
+
+        <div id="catalog-section" class="max-w-[1400px] mx-auto px-6 mb-12">
+            <div class="flex justify-between items-end border-b border-white/5 pb-6 mb-12">
+                <div>
+                    <h2 class="metal-font text-4xl tracking-tighter uppercase text-white">The Compounds</h2>
+                    <p class="text-[10px] font-bold text-stone-600 tracking-[0.4em] uppercase">Suministros de Alta Pureza</p>
+                </div>
+            </div>
+            
+            <div id="catalog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(1)">
+                        <img src="https://i.postimg.cc/ZRMy1cpC/Mesa_de_trabajo_1_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">PROTEIN</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">Whey Protein Mazapan</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$550</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(1)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+            
+                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(2)">
+                        <img src="https://i.postimg.cc/sXNZtc7B/Mesa_de_trabajo_2_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">PROTEIN</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">Whey Protein Chocolate</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$550</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(2)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+            
+                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(3)">
+                        <img src="https://i.postimg.cc/sXNZtc7M/Mesa_de_trabajo_3_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">FORCE</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">Creatine 100% Pure</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$650</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(3)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+            
+                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(4)">
+                        <img src="https://i.postimg.cc/XJzyT8dC/Mesa_de_trabajo_8_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">RECOVERY</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">BCAA</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$530</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(4)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+            
+                <!-- INICIO -->
+                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(5)">
+                        <img src="https://i.postimg.cc/V6Vb3Rn0/Mesa_de_trabajo_5_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">ENERGY</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">Pre - workout</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$650</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(5)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+                <!-- FIN -->
+                                <div class="supplement-card group">
+                    <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(6)">
+                        <img src="https://i.postimg.cc/bJB2KTkn/Mesa_de_trabajo_9_100.jpg" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                    </div>
+                    <div class="p-6">
+                        <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">FORCE + ENERGY</span>
+                        <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">BCAA + CREATINA PAQUETE</h3>
+                        <div class="flex items-end justify-between mb-6">
+                            <span class="text-2xl font-black italic text-white">$700</span>
+                            <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                        </div>
+                        <button onclick="addToCart(6)" class="w-full btn-order">Añadir</button>
+                    </div>
+                </div>
+                <!-- FIN -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-red-900/50 pt-16 pb-8 px-6 mt-20">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <!-- Columna 1: Brand -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="goth-font text-3xl text-red-700">Power Labz</span>
+                </div>
+                <p class="text-xs text-gray-500 leading-relaxed uppercase tracking-widest">
+                    Laboratorio de suplementación avanzada para mentes oscuras y cuerpos de acero.
+                </p>
+                <div class="flex gap-4 pt-4">
+                    <a href="https://www.instagram.com/powerlabz_originals/" class="text-red-900 hover:text-red-500 transition-all">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61556937702094" target="_blank" class="text-red-900 hover:text-red-500 transition-all">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="https://wa.me/525572365913?text=Hola%20Power%20Labz,%20me%20interesa%20uno%20de%20sus%20productos" target="_blank" class="text-red-900 hover:text-red-500 transition-all">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Navegación -->
+            <div class="space-y-4">
+                <h3 class="text-red-600 uppercase text-xs font-bold tracking-[0.2em] border-b border-red-900/30 pb-2">Sistema</h3>
+                <ul class="text-xs space-y-3 uppercase tracking-tighter">
+                    <li><a href="#" class="transition-colors">Protocolo Inicio</a></li>
+                    <li><a href="#" class="transition-colors">Suplementos Lab</a></li>
+                    <li><a href="#" class="transition-colors">Archivo Prohibido</a></li>
+                    <li><a href="#" class="transition-colors">FAQ Terminal</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Soporte -->
+            <div class="space-y-4">
+                <h3 class="text-red-600 uppercase text-xs font-bold tracking-[0.2em] border-b border-red-900/30 pb-2">Despacho</h3>
+                <ul class="text-xs space-y-3 uppercase tracking-tighter">
+                    <li><a href="#" class="transition-colors">Envíos Encriptados</a></li>
+                    <li><a href="#" class="transition-colors">Política de Retorno</a></li>
+                    <li><a href="#" class="transition-colors">Términos de Servicio</a></li>
+                    <li><a href="#" class="transition-colors">Aviso de Privacidad</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 4: Newsletter -->
+            <div class="space-y-4">
+                <h3 class="text-red-600 uppercase text-xs font-bold tracking-[0.2em] border-b border-red-900/30 pb-2">Subscripción</h3>
+                <p class="text-[10px] text-gray-600 uppercase">Recibe notificaciones de nuevos lotes y protocolos.</p>
+                <div class="flex">
+                    <input type="email" placeholder="EMAIL@VOID.COM" class="bg-black border border-red-900 px-3 py-2 text-[10px] w-full focus:outline-none focus:border-red-600 text-red-500">
+                    <button class="bg-red-900/20 border border-l-0 border-red-900 px-3 hover:bg-red-900 hover:text-white transition-all text-[10px]">→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra Final -->
+        <div class="border-t border-red-900/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-gray-700 uppercase tracking-widest">
+            <div>© 2024 POWER LABZ | ALL RIGHTS RESERVED | BY THE VOID</div>
+            <div class="flex gap-4 opacity-30 grayscale hover:grayscale-0 transition-all">
+                <span>VISA</span>
+                <span>MASTERCARD</span>
+                <span>AMEX</span>
+                <span>STRIPE</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Producto -->
+        <div id="product-modal" class="fixed inset-0 bg-black/95 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-xl">
+            <div class="bg-zinc-900 border border-red-900/50 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 overflow-hidden relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-red-900 hover:text-red-500 text-2xl z-10">✕</button>
+                <div class="bg-black p-4 flex items-center justify-center">
+                    <img id="modal-img" src="" alt="Producto" class="max-h-[400px] object-contain">
+                </div>
+                <div class="p-8 md:p-12 flex flex-col">
+                    <h2 id="modal-name" class="metal-font text-4xl text-red-600 mb-4"></h2>
+                    <div class="flex gap-2 mb-6">
+                        <span class="text-xs border border-red-900/30 px-2 py-0.5 opacity-50 uppercase">Grado Farmacéutico</span>
+                        <span class="text-xs border border-red-900/30 px-2 py-0.5 opacity-50 uppercase">Pureza 99%</span>
+                    </div>
+                    <p id="modal-desc" class="text-gray-400 mb-8 text-sm leading-relaxed"></p>
+                    <div class="mt-auto">
+                        <div class="flex justify-between items-end mb-6">
+                            <span class="text-gray-600 text-xs uppercase tracking-tighter">Inversión:</span>
+                            <span id="modal-price" class="text-3xl font-bold text-red-500"></span>
+                        </div>
+                        <button id="modal-buy-btn" class="w-full bg-red-700 py-4 font-black tracking-widest hover:bg-red-600 transition-colors uppercase text-sm">
+                            AÑADIR A PROTOCOLO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Cart Sidebar -->
+        <div id="cart-overlay" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[200] flex justify-end hidden">
+            <div class="bg-black w-full max-w-md h-full border-l-4 border-red-900 flex flex-col shadow-[-20px_0_50px_rgba(0,0,0,1)]">
+                
+                <div class="p-8 pb-4 flex justify-between items-start shrink-0">
+                    <div>
+                        <h2 class="metal-font text-3xl text-white tracking-widest">TU PROTOCOLO</h2>
+                        <p id="zeigarnik-status-msg" class="text-[10px] text-red-600 font-black tracking-widest mt-1 uppercase">CARGA INCOMPLETA</p>
+                    </div>
+                    <button onclick="toggleCart()" class="text-stone-600 hover:text-red-600 text-3xl transition">×</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto px-8 custom-scroll">
+                    
+                    <div class="mb-6 bg-white/5 border border-white/10 p-4">
+                        <div class="flex justify-between text-[8px] text-stone-500 mb-2 uppercase font-black tracking-widest">
+                            <span>Sincronización de Stack</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="h-1 bg-stone-900 overflow-hidden">
+                            <div id="zeigarnik-fill" class="h-full bg-red-600 transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                        <p id="zeigarnik-hint" class="text-[9px] text-stone-400 italic mt-2 uppercase tracking-tighter">Inicia tu ritual.</p>
+                    </div>
+
+                    <div id="cart-items" class="space-y-4 mb-10">
+                        </div>
+
+                    <div class="border-t border-red-900/50 pt-6 pb-10 space-y-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <h3 class="metal-font text-sm text-white tracking-widest uppercase">Coordenadas de Envío</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 gap-3">
+                            <select id="ship-state" onchange="updateCart()" class="w-full bg-stone-900 border border-red-900/50 p-2 text-xs text-red-500 focus:border-red-600 outline-none uppercase font-bold">
+                                <option value="">SELECCIONA ESTADO...</option>
+                                <option value="Aguascalientes">Aguascalientes</option>
+                                <option value="Baja California">Baja California</option>
+                                <option value="Baja California Sur">Baja California Sur</option>
+                                <option value="Campeche">Campeche</option>
+                                <option value="Chiapas">Chiapas</option>
+                                <option value="Chihuahua">Chihuahua</option>
+                                <option value="Ciudad de México o CDMX">CDMX</option>
+                                <option value="Coahuila">Coahuila</option>
+                                <option value="Colima">Colima</option>
+                                <option value="Durango">Durango</option>
+                                <option value="Estado de México">Estado de México</option>
+                                <option value="Guanajuato">Guanajuato</option>
+                                <option value="Guerrero">Guerrero</option>
+                                <option value="Hidalgo">Hidalgo</option>
+                                <option value="Jalisco">Jalisco</option>
+                                <option value="Michoacán">Michoacán</option>
+                                <option value="Morelos">Morelos</option>
+                                <option value="Nayarit">Nayarit</option>
+                                <option value="Nuevo León">Nuevo León</option>
+                                <option value="Oaxaca">Oaxaca</option>
+                                <option value="Puebla">Puebla</option>
+                                <option value="Querétaro">Querétaro</option>
+                                <option value="Quintana Roo">Quintana Roo</option>
+                                <option value="San Luis Potosí">San Luis Potosí</option>
+                                <option value="Sinaloa">Sinaloa</option>
+                                <option value="Sonora">Sonora</option>
+                                <option value="Tabasco">Tabasco</option>
+                                <option value="Tamaulipas">Tamaulipas</option>
+                                <option value="Tlaxcala">Tlaxcala</option>
+                                <option value="Veracruz">Veracruz</option>
+                                <option value="Yucatán">Yucatán</option>
+                                <option value="Zacatecas">Zacatecas</option>
+                            </select>
+                            
+                            <input type="text" id="ship-address" placeholder="CALLE Y NÚMERO" class="w-full bg-stone-900 border border-white/10 p-2 text-[10px] text-white outline-none focus:border-red-600 uppercase">
+                            
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="text" id="ship-colonia" placeholder="COLONIA" class="bg-stone-900 border border-white/10 p-2 text-[10px] text-white outline-none focus:border-red-600 uppercase">
+                                <input type="text" id="ship-cp" placeholder="C.P." class="bg-stone-900 border border-white/10 p-2 text-[10px] text-white outline-none focus:border-red-600 uppercase">
+                            </div>
+                            
+                            <textarea id="ship-refs" placeholder="REFERENCIAS (COLOR DE CASA, ENTRE CALLES)" class="w-full bg-stone-900 border border-white/10 p-2 text-[10px] text-white outline-none focus:border-red-600 h-16 uppercase"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 pt-4 border-t border-red-900 bg-black shrink-0">
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="coupon-code" placeholder="CÓDIGO DE ACCESO" class="flex-1 bg-transparent border border-stone-800 p-2 text-[10px] text-white outline-none focus:border-red-600">
+                        <button onclick="applyCoupon()" class="bg-stone-900 text-white px-4 text-[10px] font-black hover:bg-red-900 transition uppercase tracking-widest">Aplicar</button>
+                    </div>
+                    <p id="coupon-msg" class="hidden"></p>
+
+                    <div class="space-y-2 mb-6 text-right">
+                        <div id="discount-applied-label" class="text-green-600 text-[10px] font-black tracking-widest hidden uppercase">Descuento Aplicado</div>
+                        <div id="cart-old-total" class="text-stone-600 line-through text-sm hidden font-bold"></div>
+                        <div class="text-stone-500 text-[10px] uppercase font-black tracking-widest">Inversión Final</div>
+                        <div id="cart-total" class="text-4xl text-white font-black italic tracking-tighter">$0</div>
+                    </div>
+
+                    <button onclick="checkout()" class="w-full btn-order py-4 text-lg">FINALIZAR PROTOCOLO</button>
+                </div>
+            </div>
+        </div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 z-[300] hidden bg-black/98 flex items-center justify-center p-4">
+        <div class="bg-[#050505] border border-red-900/50 w-full max-w-5xl h-auto max-h-[90vh] flex flex-col md:flex-row relative">
+            <div class="w-full md:w-1/2 p-12 bg-[#000] flex items-center justify-center">
+                <img id="modal-img" src="" class="max-w-[300px] h-auto drop-shadow-2xl filter grayscale-[0.2]">
+            </div>
+            <div class="w-full md:w-1/2 p-12 flex flex-col justify-center border-l border-white/5">
+                <button onclick="closeModal()" class="absolute top-8 right-8 text-stone-700 hover:text-red-600 transition text-3xl">×</button>
+                <span class="text-red-600 text-[10px] font-black tracking-[0.3em] uppercase mb-4">Chemical Composition</span>
+                <h2 id="modal-name" class="metal-font text-5xl mb-6 text-white tracking-widest uppercase"></h2>
+                <p id="modal-price" class="text-3xl font-black text-red-600 mb-8 italic"></p>
+                <div class="flex-1 overflow-y-auto pr-4 mb-8">
+                    <p id="modal-desc" class="text-stone-400 text-sm leading-relaxed border-l border-red-900 pl-4"></p>
+                </div>
+                <button id="modal-buy-btn" class="btn-order w-full py-5">Integrar al Stack</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const products = [
+        { id: 1, name: "Whey Protein Mazapan", price: 550, category: "PROTEIN", desc: "Aislado de proteína de máxima pureza. Cero azúcar.", img: "https://i.postimg.cc/ZRMy1cpC/Mesa_de_trabajo_1_100.jpg" },
+        { id: 2, name: "Whey Protein Chocolate", price: 550, category: "PROTEIN", desc: "Aislado de proteína de máxima pureza. Cero azúcar.", img: "https://i.postimg.cc/sXNZtc7B/Mesa_de_trabajo_2_100.jpg" },
+        { id: 3, name: "Creatine 100% Pure", price: 650, category: "FORCE", desc: "Monohidrato de creatina micronizada de grado farmacéutico.", img: "https://i.postimg.cc/sXNZtc7M/Mesa_de_trabajo_3_100.jpg" },
+        { id: 4, name: "BCAA", price: 530, category: "RECOVERY", desc: "Mezcla de BCAAs y glutamina con electrolitos esenciales.", img: "https://i.postimg.cc/XJzyT8dC/Mesa_de_trabajo_8_100.jpg" },
+        { id: 5, name: "Pre - workout", price: 650, category: "ENERGY", desc: "Optimización hormonal natural para elevar niveles de fuerza.", img: "https://i.postimg.cc/V6Vb3Rn0/Mesa_de_trabajo_5_100.jpg" },
+        { id: 6, name: "BCAA + CREATINA PAQUETE", price: 700, category: "FORCE + ENERGY", desc: "Optimización hormonal natural para elevar niveles de fuerza.", img: "https://i.postimg.cc/bJB2KTkn/Mesa_de_trabajo_9_100.jpg" },
+
+    ];
+
+    const shippingCosts = new Map([
+        ["Aguascalientes", 350], ["Baja California", 450], ["Baja California Sur", 450], 
+        ["Campeche", 360], ["Chiapas", 360], ["Chihuahua", 430], 
+        ["Ciudad de México o CDMX", 350], ["Coahuila", 350], ["Colima", 350], 
+        ["Durango", 360], ["Estado de México", 350], ["Guanajuato", 350], 
+        ["Guerrero", 360], ["Hidalgo", 350], ["Jalisco", 340], 
+        ["Michoacán", 350], ["Morelos", 350], ["Nayarit", 350], 
+        ["Nuevo León", 400], ["Oaxaca", 360], ["Puebla", 350], 
+        ["Querétaro", 360], ["Quintana Roo", 400], ["San Luis Potosí", 350], 
+        ["Sinaloa", 430], ["Sonora", 450], ["Tabasco", 360], 
+        ["Tamaulipas", 360], ["Tlaxcala", 360], ["Veracruz", 350], 
+        ["Yucatán", 400], ["Zacatecas", 350]
+    ]);
+
+    let cart = [];
+    let discount = 0;
+    const VALID_COUPONS = {
+        "GOTH10": 0.10,
+        "POWER20": 0.20,
+        "LABZ50": 0.50  
+    };
+
+    function renderProducts() {
+        const container = document.getElementById('catalog-container');
+        container.innerHTML = products.map(p => `
+            <div class="supplement-card group">
+                <div class="cursor-pointer p-8 relative flex items-center justify-center bg-black/40 h-64" onclick="openModal(${p.id})">
+                    <img src="${p.img}" class="h-full object-contain transform group-hover:scale-110 transition duration-700 grayscale-[0.4] group-hover:grayscale-0">
+                </div>
+                <div class="p-6">
+                    <span class="text-[9px] font-black text-red-600 uppercase tracking-widest">${p.category}</span>
+                    <h3 class="metal-font text-xl text-white tracking-widest uppercase mt-1 mb-4">${p.name}</h3>
+                    <div class="flex items-end justify-between mb-6">
+                        <span class="text-2xl font-black italic text-white">$${p.price.toLocaleString()}</span>
+                        <span class="text-[9px] text-stone-600 font-bold uppercase tracking-widest">MXN</span>
+                    </div>
+                    <button onclick="addToCart(${p.id})" class="w-full btn-order">Añadir</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addToCart(id) {
+        const product = products.find(x => x.id === id);
+        const existingItem = cart.find(item => item.id === id);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...product, quantity: 1 });
+        }
+        updateCart();
+        if(document.getElementById('cart-overlay').classList.contains('hidden')) toggleCart();
+    }
+
+    function removeFromCart(id) {
+        const itemIndex = cart.findIndex(item => item.id === id);
+        if (itemIndex > -1) {
+            if (cart[itemIndex].quantity > 1) {
+                cart[itemIndex].quantity -= 1;
+            } else {
+                cart.splice(itemIndex, 1);
+            }
+        }
+        updateCart();
+    }
+
+    function deleteProduct(id) {
+        cart = cart.filter(item => item.id !== id);
+        updateCart();
+    }
+
+    function applyCoupon() {
+        const input = document.getElementById('coupon-code');
+        const msg = document.getElementById('coupon-msg');
+        const code = input.value.toUpperCase();
+
+        if (VALID_COUPONS[code]) {
+            discount = VALID_COUPONS[code];
+            msg.innerText = "ACCESO CONCEDIDO: " + (discount * 100) + "% OFF";
+            msg.className = "text-[8px] mt-2 font-bold uppercase text-green-600";
+        } else {
+            discount = 0;
+            msg.innerText = "CÓDIGO INVÁLIDO O EXPIRADO";
+            msg.className = "text-[8px] mt-2 font-bold uppercase text-red-600";
+        }
+        updateCart();
+    }
+
+    function updateCart() {
+        const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+        document.getElementById('cart-count').innerText = totalItems;
+        
+        const container = document.getElementById('cart-items');
+        
+        container.innerHTML = cart.length ? cart.map((item) => `
+            <div class="flex items-center gap-4 bg-white/5 p-4 border border-white/5 hover:border-red-900/30 transition">
+                <img src="${item.img}" class="w-12 h-12 object-contain filter grayscale">
+                <div class="flex-1">
+                    <p class="metal-font text-[10px] tracking-widest text-white uppercase mb-1">${item.name}</p>
+                    <div class="flex items-center gap-2 mb-1">
+                        <button onclick="removeFromCart(${item.id})" class="w-5 h-5 flex items-center justify-center bg-stone-800 text-white hover:bg-red-600 transition text-xs font-bold border border-white/10">-</button>
+                        <span class="text-[10px] text-white font-black px-1">${item.quantity}</span>
+                        <button onclick="addToCart(${item.id})" class="w-5 h-5 flex items-center justify-center bg-stone-800 text-white hover:bg-red-600 transition text-xs font-bold border border-white/10">+</button>
+                    </div>
+                    <p class="text-[10px] text-red-600 font-black">$${(item.price * item.quantity).toLocaleString()}</p>
+                </div>
+                <button onclick="deleteProduct(${item.id})" class="text-stone-700 hover:text-red-600 transition font-black text-[9px] uppercase tracking-tighter">Eliminar</button>
+            </div>
+        `).join('') : `<div class="h-32 flex items-center justify-center text-stone-800 text-[10px] uppercase tracking-widest font-black italic border-2 border-dashed border-white/5">Protocolo Vacío</div>`;
+
+        // LÓGICA DE COSTOS
+        const subtotal = cart.reduce((a, b) => a + (b.price * b.quantity), 0);
+        const selectedState = document.getElementById('ship-state').value;
+        const shippingPrice = shippingCosts.get(selectedState) || 0;
+        
+        const subtotalWithDiscount = subtotal * (1 - discount);
+        const totalFinal = subtotalWithDiscount + shippingPrice;
+
+        // Actualizar UI de precios
+        const totalEl = document.getElementById('cart-total');
+        const oldTotalEl = document.getElementById('cart-old-total');
+        const discountLabel = document.getElementById('discount-applied-label');
+
+        totalEl.innerText = `$${Math.round(totalFinal).toLocaleString()}`;
+        
+        if(discount > 0 && subtotal > 0) {
+            oldTotalEl.innerText = `$${subtotal.toLocaleString()}`;
+            oldTotalEl.classList.remove('hidden');
+            discountLabel.classList.remove('hidden');
+        } else {
+            oldTotalEl.classList.add('hidden');
+            discountLabel.classList.add('hidden');
+        }
+
+        // Actualizar barra de progreso Zeigarnik
+        const targetCount = 3;
+        const progress = Math.min((totalItems / targetCount) * 100, 100);
+        document.getElementById('zeigarnik-fill').style.width = `${progress}%`;
+        document.getElementById('progress-percent').innerText = `${Math.round(progress)}%`;
+        
+        const statusMsg = document.getElementById('zeigarnik-status-msg');
+        const hint = document.getElementById('zeigarnik-hint');
+
+        if (shippingPrice > 0) {
+            hint.innerHTML = `Envío a ${selectedState}: <span class="text-red-500">+$${shippingPrice}</span>`;
+        } else if (totalItems > 0) {
+            hint.innerText = "Selecciona un estado para calcular envío.";
+        }
+    }
+
+    function toggleCart() { document.getElementById('cart-overlay').classList.toggle('hidden'); }
+
+    function openModal(id) {
+        const p = products.find(x => x.id === id);
+        document.getElementById('modal-name').innerText = p.name;
+        document.getElementById('modal-price').innerText = `$${p.price.toLocaleString()} MXN`;
+        document.getElementById('modal-desc').innerText = p.desc;
+        document.getElementById('modal-img').src = p.img;
+        document.getElementById('modal-buy-btn').onclick = () => { addToCart(p.id); closeModal(); };
+        document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+    function checkout() {
+        if(!cart.length) return;
+
+        const state = document.getElementById('ship-state').value;
+        const addr = document.getElementById('ship-address').value;
+        const col = document.getElementById('ship-colonia').value;
+        const cp = document.getElementById('ship-cp').value;
+        const refs = document.getElementById('ship-refs').value;
+
+        if(!state || !addr || !col || !cp) {
+            alert("⚠️ ERROR: Completa la información de envío.");
+            return;
+        }
+
+        const subtotal = cart.reduce((a, b) => a + (b.price * b.quantity), 0);
+        const shipping = shippingCosts.get(state) || 0;
+        const total = (subtotal * (1 - discount)) + shipping;
+
+        let msg = `*⚡️ PROTOCOLO POWER LABZ ACTIVADO*\n\n`;
+        msg += `_Suministro solicitado:_\n`;
+        cart.forEach(item => {
+            msg += `💀 *${item.name.toUpperCase()}* (x${item.quantity})\n`;
+        });
+
+        msg += `\n📍 *DATOS DE ENVÍO:*\n`;
+        msg += `Estado: ${state}\n`;
+        msg += `Dirección: ${addr}\n`;
+        msg += `Colonia: ${col} | CP: ${cp}\n`;
+        if(refs) msg += `Ref: ${refs}\n`;
+
+        msg += `\n*Envío:* $${shipping}\n`;
+        if(discount > 0) msg += `*Descuento:* ${discount * 100}%\n`;
+        msg += `*TOTAL A PAGAR: $${Math.round(total).toLocaleString()} MXN*\n\n`;
+        msg += `_Esperando instrucciones de pago..._`;
+
+        window.open(`https://wa.me/525572365913?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    window.onload = renderProducts;
+    </script>
+
+</body></html>
